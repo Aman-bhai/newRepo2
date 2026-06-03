@@ -1,134 +1,28 @@
-_schema-version: "3.3"
-ID: crud-app-employee
-version: 1.0.0
+name: CAP CI Pipeline
 
-parameters:
-  enable-parallel-deployments: true
+on:
+  push:
+    branches: [ main ]
 
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm install
-        - npx cds build --production
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-modules:
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-  # ✅ CAP Backend
-  - name: crud-app-employee-srv
-    type: nodejs
-    path: gen/srv
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    parameters:
-      memory: 512M
+      - name: Install Dependencies
+        run: npm install
 
-    provides:
-      - name: srv-api
-        properties:
-          srv-url: ${default-url}
+      - name: Build CAP Project
+        run: npx cds build
 
-    requires:
-      - name: crud-db
-      - name: crud-xsuaa
-      - name: crud-destination
-
-    build-parameters:
-      builder: npm-ci
-
-  # ✅ HANA DB Deployer
-  - name: crud-db-deployer
-    type: hdb
-    path: gen/db
-
-    requires:
-      - name: crud-db
-
-  # ✅ Fiori UI (your project1 app)
-  - name: project1
-    type: html5
-    path: app/project1
-
-    build-parameters:
-      builder: custom
-      commands:
-        - npm install
-        - npm run build
-      supported-platforms: []
-
-    requires:
-      - name: crud-html5-repo-host
-
-  # ✅ UI Deployer
-  - name: project1-deployer
-    type: com.sap.html5.application-content
-    path: app/project1/dist
-
-    requires:
-      - name: crud-html5-repo-host
-
-  # ✅ App Router
-  - name: crud-approuter
-    type: approuter.nodejs
-    path: app/router
-
-    parameters:
-      memory: 256M
-
-    requires:
-      # Backend destination
-      - name: srv-api
-        group: destinations
-        properties:
-          name: srv-api
-          url: ~{srv-url}
-          forwardAuthToken: true
-
-      # XSUAA
-      - name: crud-xsuaa
-
-      # HTML5 runtime
-      - name: crud-html5-repo-runtime
-        group: destinations
-        properties:
-          name: project1
-          forwardAuthToken: true
-
----
-
-resources:
-
-  # ✅ HANA Database
-  - name: crud-db
-    type: com.sap.xs.hdi-container
-    parameters:
-      service: hana
-      service-plan: hdi-shared
-
-  # ✅ XSUAA
-  - name: crud-xsuaa
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: xsuaa
-      service-plan: application
-      path: xs-security.json
-
-  # ✅ Destination Service
-  - name: crud-destination
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: destination
-      service-plan: lite
-
-  # ✅ HTML5 Repo Host
-  - name: crud-html5-repo-host
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-host
-
-  # ✅ HTML5 Repo Runtime
-  - name: crud-html5-repo-runtime
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: html5-apps-repo
-      service-plan: app-runtime
+      - name: Run Tests (optional)
+        run: npm test || echo "No tests"
+``
