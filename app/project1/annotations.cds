@@ -1,0 +1,1 @@
+using EService as service from '../../srv/employee-service';

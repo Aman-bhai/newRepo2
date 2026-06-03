@@ -1,0 +1,6 @@
+ID,createdAt,createdBy,modifiedAt,modifiedBy,firstName,lastName,email,phone,salary,hireDate,department
+550e8400-e29b-41d4-a716-446655440000,2026-01-01T10:00:00Z,admin,2026-01-01T10:00:00Z,admin,John,Doe,john.doe@example.com,9876543210,50000.00,2023-06-15,IT
+550e8400-e29b-41d4-a716-446655440001,2026-01-02T11:00:00Z,admin,2026-01-02T11:00:00Z,admin,Jane,Smith,jane.smith@example.com,9123456780,60000.00,2022-09-10,HR
+550e8400-e29b-41d4-a716-446655440002,2026-01-03T12:00:00Z,admin,2026-01-03T12:00:00Z,admin,Rahul,Sharma,rahul.sharma@example.com,9988776655,45000.00,2024-02-01,Finance
+550e8400-e29b-41d4-a716-446655440003,2026-01-04T13:00:00Z,admin,2026-01-04T13:00:00Z,admin,Priya,Verma,priya.verma@example.com,8899776655,70000.00,2021-12-20,Sales
+550e8400-e29b-41d4-a716-446655440004,2026-01-05T14:00:00Z,admin,2026-01-05T14:00:00Z,admin,Amit,Kumar,amit.kumar@example.com,7788996655,55000.00,2023-04-25,IT
